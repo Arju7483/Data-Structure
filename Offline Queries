@@ -1,0 +1,71 @@
+"If a problem involve processing queries then there are online solutions and offline solutions. Online means that your solution can process each query before reading the the queries that come after it. Offline means that your solution reads all queries then process them , probably you sort the queries in some order so that you can process them faster." - Hasan Jaddouh
+Problem: Given an array of length n(n<=10^5) and q queries(q<=10^5) .In each query you need to find the number of distinct elements in a subarray.
+Problem Link : https://vjudge.net/problem/SPOJ-DQUERY/origin
+Solution:
+
+#include<bits/stdc++.h>
+using namespace std;
+const int N = 30007,Qsize = 2e5+7;
+#define ll long long
+int ar[N],tree[4*N];
+vector<pair<int,int>>Q[N];
+void build(int node,int b,int e){
+    if(b==e){
+        tree[node] = 0;
+        return;
+    }
+    int left = 2*node , right = 2*node+1,mid = (b+e)>>1;
+    build(left,b,mid);
+    build(right,mid+1,e);
+    tree[node] = tree[left] + tree[right];
+}
+void update(int node,int b,int e,int ind,int value){
+    if(b>ind||e<ind)return;
+    if(b==ind&&e==ind){
+        tree[node] += value;
+        return;
+    }
+    int left = 2*node , right = 2*node+1,mid = (b+e)>>1;
+    update(left,b,mid,ind,value);
+    update(right,mid+1,e,ind,value);
+    tree[node] = tree[left] + tree[right];
+}
+int query(int node,int b,int e,int l,int r){
+    if(b>r||e<l)return 0;
+    if(b>=l&&e<=r){
+        return tree[node];
+    }
+    int left = 2*node , right = 2*node+1,mid = (b+e)>>1;
+    return query(left,b,mid,l,r)+query(right,mid+1,e,l,r);
+}
+int main(){
+    int n;
+    cin >> n;
+    for(int i=1;i<=n;i++)cin >> ar[i];
+    int q;
+    cin >> q;
+    for(int i=1;i<=q;i++){
+        int l,r;
+        cin >> l >> r;
+        Q[r].push_back({l,i}); //storing queries based on r
+    }
+    map<int,int>last_oc; //last occurance of any element
+    int ans[q+1];
+    build(1,1,n);
+    for(int r=1;r<=n;r++){
+
+            if(last_oc.find(ar[r]) != last_oc.end()){
+
+                update(1,1,n,last_oc[ar[r]],-1); // if already exist  then previous occurrence get 0 (+1-1=0)
+            }
+            update(1,1,n,r,1);  // add 1 at new occurrence
+            last_oc[ar[r]]=r;
+            for(auto [l,q_no]:Q[r]){
+                ans[q_no] = query(1,1,n,l,r);
+            }
+    }
+    for(int i=1;i<=q;i++){
+        cout<<ans[i]<<endl;
+    }
+
+}
