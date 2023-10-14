@@ -1,0 +1,39 @@
+///sparse table is used to range query.Query is done in O(1) time;
+#include<bits/stdc++.h>
+using namespace std;
+using ll = long long;
+const int N = 1e5+9,K = log2(1e5+9), inf = 1e9;
+int sparse[K+5][N] , ar[N];
+int merge(int a,int b){
+     return max(a,b); // Here we find max element in a given range
+}
+void build_SparseTable(int n){
+     for(int i=1;i<=n;i++) sparse[0][i] = ar[i];
+
+     for(int i=1;(1<<i)<=n;i++){
+          for(int j=1;j+(1<<i)-1<=n;j++){
+               sparse[i][j] = merge(sparse[i-1][j], sparse[i-1][j+(1<<(i-1))]);
+          }
+     }
+}
+int query(int l, int r){
+     int len = r - l + 1;
+     int lg = log2(len);
+     int ans = merge(sparse[lg][l], sparse[lg][r - (1 << lg) + 1]);
+     return ans;
+}
+
+
+int main(){
+    ios::sync_with_stdio(false);cin.tie(0);cout.tie(0);
+
+     int n; cin >> n;
+     for(int i=1;i<=n;i++) cin >> ar[i];
+     build_SparseTable(n);
+     int q; cin >> q;
+     while(q--){
+          int l,r;
+          cin >> l >> r;
+          cout << query(l,r) << endl;
+     }
+}
