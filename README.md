@@ -3,6 +3,8 @@
 <details markdown = "1"><summary>Trie</summary>
   
   [Problem-01 : ](https://codeforces.com/contest/1902/problem/E) &nbsp; [My Solution](https://codeforces.com/contest/1902/submission/237258350)
+
+  [Problem-02 : ](https://cses.fi/problemset/task/1731) &nbsp; [My Solution](https://cses.fi/paste/d6b9e93eb68bd71f75b0e9/)
   
 </details>
 
