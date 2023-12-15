@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N = 1e5+9;
+struct TrieNode{
+	struct TrieNode* child[26];
+	bool isEnd;
+	TrieNode(){
+		isEnd = false;
+		for(int i = 0; i < 26; i++){
+			child[i] = NULL;
+		}
+	} 
+};
+
+TrieNode *root = new TrieNode();
+void Insert(string s){
+	int n = s.size();
+	TrieNode *cur = root;
+	for(int i = 0; i < n; i++){
+		int ind = s[i] - 'a';
+		if(cur->child[ind] == NULL){
+			cur->child[ind] = new TrieNode();
+		}
+		cur = cur->child[ind];
+	}
+	cur->isEnd = true;
+}
+
+bool search_String(string str){
+    TrieNode *curr = root;
+    int n = str.length();
+    for(int i=0;i<n;i++){
+        int idx = str[i] - 'a';
+        if(curr->child[idx]==NULL){
+            return false;
+        }
+        curr = curr->child[idx];
+    }
+    return curr->isEnd;
+}
+
+int main(){
+ios::sync_with_stdio(false);cin.tie(0);
+#ifndef ONLINE_JUDGE
+freopen("input.txt","r",stdin); 
+freopen("output.txt","w",stdout); 
+#endif
+	
+	int n; cin >> n;
+	for(int i = 1; i <= n; i++){
+		string s; cin >> s;
+		Insert(s);
+	}
+
+	string s; cin >> s;
+	if(search_String(s))cout<<"yes";
+	else cout<<"no";
+}
