@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N = 1e5+9;
+struct TrieNode{
+ int node[N][26];
+ int isEnd[N]; // is current i-th node is terminal or not ?
+ int root, cur;
+ TrieNode(){
+
+    memset(node,-1,sizeof node);
+    memset(isEnd,0,sizeof isEnd);
+    cur = root = 0;
+ }
+
+void Insert(string s){
+    int n = s.size();
+    int nd = root;
+    for(int i = 0; i < n; i++){
+        int ind = s[i] - 'a';
+        if(node[nd][ind] == -1){
+            node[nd][ind] = ++cur;
+        }
+        nd = node[nd][ind];
+        
+    } 
+    isEnd[nd] = 1;
+}
+
+bool search_String(string str){
+    int n = str.length();
+    int nd = root;
+    for(int i=0;i<n;i++){
+        int idx = str[i] - 'a';
+        if(node[nd][idx] == -1) return false;
+        nd = node[nd][idx];
+    }
+    return isEnd[nd];
+}
+
+};
+
+string s[N];
+int main(){
+ios::sync_with_stdio(false);cin.tie(0);
+#ifndef ONLINE_JUDGE
+freopen("input.txt","r",stdin); 
+freopen("output.txt","w",stdout); 
+#endif
+    TrieNode Trie;
+    int n; cin >> n;
+    for(int i = 1; i <= n; i++){
+        string s; cin >> s;
+        Trie.Insert(s);
+    }
+
+    string s; cin >> s;
+    if(Trie.search_String(s))cout<<"yes";
+    else cout<<"no";
+}
